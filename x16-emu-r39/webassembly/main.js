@@ -70,7 +70,6 @@ if (manifest_link) {
 }
 
 var Module = {
-
     preRun: [
         function () { //Set the keyboard handling element (it's document by default). Keystrokes are stopped from propagating by emscripten, maybe there's an option to disable this?
             ENV.SDL_EMSCRIPTEN_KEYBOARD_ELEMENT = "#canvas";
@@ -82,8 +81,31 @@ var Module = {
                     loadZip(manifest_link);
                 }
                 else {
-                    loadManifest();
+                    addRunDependency('load-manifest');
+                    fetch(manifest_link + 'manifest.json').then(function (response) {
+                        return response.json();
+                    }).then(function (manifest) {
+                        if (manifest.start_bas) {
+                            emuArguments.push('-bas', manifest.start_bas, '-run');
+                        }
+                        else if (manifest.start_prg) {
+                            console.log('Adding start PRG: ', manifest.start_prg)
+                            emuArguments.push('-prg', manifest.start_prg, '-run');
+                        }
+                        console.log("Loading from manifest:")
+                        console.log(manifest);
+                        manifest.resources.forEach(element => {
+                            element = manifest_link + element;
+                            let filename = element.replace(/^.*[\\\/]/, '')
+                            FS.createPreloadedFile('/', filename, element, true, true);
+
+                        });
+                        removeRunDependency('load-manifest');
+                    }).catch(function () {
+                        console.log("Unable to read manifest. Check the manifest http parameter");
+                    });
                 }
+
             }
         }
     ],
@@ -164,7 +186,7 @@ Module.setStatus('Downloading file...');
 logOutput('Downloading file...');
 
 window.onerror = function () {
-    // Module.setStatus('Exception thrown, see JavaScript console');
+    Module.setStatus('Exception thrown, see JavaScript console');
     spinnerElement.style.display = 'none';
     Module.setStatus = function (text) {
         if (text) Module.printErr('[post-exception status] ' + text);
@@ -251,31 +273,6 @@ function extractManifestFromBuffer(zip) {
     }
 }
 
-function loadManifest() {
-    addRunDependency('load-manifest');
-    fetch(manifest_link + 'manifest.json').then(function (response) {
-        return response.json();
-    }).then(function (manifest) {
-        if (manifest.start_bas) {
-            emuArguments.push('-bas', manifest.start_bas, '-run');
-        }
-        else if (manifest.start_prg) {
-            console.log('Adding start PRG: ', manifest.start_prg)
-            emuArguments.push('-prg', manifest.start_prg, '-run');
-        }
-        console.log("Loading from manifest:")
-        console.log(manifest);
-        manifest.resources.forEach(element => {
-            element = manifest_link + element;
-            let filename = element.replace(/^.*[\\\/]/, '')
-            FS.createPreloadedFile('/', filename, element, true, true);
-
-        });
-        removeRunDependency('load-manifest');
-    }).catch(function () {
-        console.log("Unable to read manifest. Check the manifest http parameter");
-    });
-}
 
 function toggleAudio() {
     if (audioContext && audioContext.state != "running") {
