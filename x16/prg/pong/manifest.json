@@ -1,0 +1,11 @@
+{
+    "manifest_version": "1.0.1",
+    "name": "Yet another pong clone",
+    "author": "Radoslaw",
+    "app_version": "1.0.1",
+    "license": "GPL 3",
+    "start_prg": "PONG.PRG",
+    "resources": [
+        "PONG.PRG"
+    ]
+} 
