@@ -1,0 +1,26 @@
+{
+    "manifest_version": "1.0.0",
+    "name": "Xixit",
+    "author": "The 8-Bit Guy",
+    "app_version": "1.0.0",
+    "license": "GPL 3",
+    "start_prg": "XIXIT.PRG",
+    "resources": [
+        "SOUNDS.BIN",
+        "SHAPES.BIN",
+        "LEV1.BIN",
+        "LEV2.BIN",
+        "LEV3.BIN",
+        "LEV4.BIN",
+        "MUSIC.BIN",
+        "SEV8.BIN",
+        "SEV1.BIN",
+        "SEV2.BIN",
+        "SEV3.BIN",
+        "SEV4.BIN",
+        "SEV5.BIN",
+        "SEV6.BIN",
+        "SEV7.BIN",
+        "XIXIT.PRG"
+    ]
+} 
