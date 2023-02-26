@@ -1,0 +1,29 @@
+{
+    "manifest_version": "1.0.0",
+    "name": "Tetrads",
+    "author": "The 8-Bit Guy",
+    "app_version": "1.0.0",
+    "license": "GPL 3",
+    "start_prg": "TETRADS.PRG",
+    "resources": [
+        "BG0.RLE",
+        "BG1.RLE",
+        "BG2.RLE",
+        "BG3.RLE",
+        "BG4.RLE",
+        "BG5.RLE",
+        "BG6.RLE",
+        "BG7.RLE",
+        "BG8.RLE",
+        "BG9.RLE",
+        "INGAME0.ZSM",
+        "INGAME1.ZSM",
+        "INGAME2.ZSM",
+        "INGAME3.ZSM",
+        "INGAME4.ZSM",
+        "INGAME5.ZSM",
+        "SOUNDS.BIN",
+        "TETRADS.PRG",
+        "ZSOUND.PRG"
+    ]
+} 
