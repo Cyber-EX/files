@@ -1,0 +1,13 @@
+{
+    "start_prg": "FLAPPY.PRG",
+    "resources": [
+        "BACKGROUND.BIN",
+        "BANNERS.BIN",
+        "BIRD.BIN",
+        "DIFFICULTY.BIN",
+        "FLAPPY.PRG",
+        "RAMPS.BIN",
+        "REPORT.BIN",
+        "TILES.BIN"
+    ]
+} 
