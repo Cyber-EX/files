@@ -1,6 +1,6 @@
 {
-    "start_prg": "VIDEOPOKER.PRG",
+    "start_prg": "videopoker.prg",
     "resources": [
-        "VIDEOPOKER.PRG"
+        "videopoker.prg"
     ]
 } 
