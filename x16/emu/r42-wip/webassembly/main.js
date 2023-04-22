@@ -75,7 +75,7 @@ var isZipFile = false;
 
 
 console.log('========');
-console.log('TRY 4');
+console.log('TRY 5 (add start func)');
 
 fetch(manifest_link).then(resp=>{
     console.log(resp.headers);
