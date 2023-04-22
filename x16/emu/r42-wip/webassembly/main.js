@@ -85,6 +85,7 @@ fetch(manifest_link).then(resp=>{
   // OR you can do this
   for(let entry of resp.headers.entries()) {
     console.log(entry);    
+  }
 })
 
 console.log('========');
