@@ -75,7 +75,7 @@ var isZipFile = false;
 
 
 console.log('========');
-console.log('TRY 3');
+console.log('TRY 4');
 
 fetch(manifest_link).then(resp=>{
     console.log(resp.headers);
@@ -86,13 +86,17 @@ fetch(manifest_link).then(resp=>{
   for(let entry of resp.headers.entries()) {
     console.log(entry);    
   }
+  console.log('--------');
+    let contdisp = resp.headers.get('Content-Disposition');
+    console.log(contdisp);
+    console.log(getFileName(contdisp));
 })
 
 console.log('========');
 
-console.log('attachment; filename*=UTF-8\'\'MAZEDEMO.ZIP');
-console.log(getFileName('attachment; filename*=UTF-8\'\'MAZEDEMO.ZIP'));
-console.log(getFileName('attachment;filename=XYZ.csv'));
+console.log('attachment; filename*=UTF-8\'\'FILE_UTF8.ext');
+console.log(getFileName('attachment; filename*=UTF-8\'\'FILE_UTF8.ext'));
+console.log(getFileName('attachment;filename=FILE.ext'));
 
 
 function getFileName(disposition) {
