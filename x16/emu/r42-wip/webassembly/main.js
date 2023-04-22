@@ -278,27 +278,42 @@ function extractManifestFromBuffer(zip) {
                 addStartFile(manifestObject);
 
                 const promises = [];
-                const writeResources = (zip) => {
-                    zip.forEach((path, file) => {
-                        if(file.dir) {
-                            FS.mkdirTree(file.name);
-                            writeResources(zip.folder(path));
-                            return;
+                if (manifestObject.resources) {
+                    manifestObject.resources.forEach(function (element) {
+                        let fileName = element.replace(/^.*[\\\/]/, '');
+
+                        if (zip.file(fileName) == null) {
+                            logError("Unable to find resources entry: " + fileName);
+                            logError("This is likely an error, check resources section in manifest.")
+                        } else {
+                            promises.push(zip.file(fileName).async("uint8array").then(function (content) {
+                                console.log('Writing to emulator filesystem:', fileName);
+                                FS.writeFile(fileName, content);
+                            }));
                         }
-
-                        promises.push(zip.file(path).async("uint8array").then(function (content) {
-                            console.log('Writing to emulator filesystem:', file.name);
-                            try {
-                                FS.writeFile(file.name, content);
-                            }
-                            catch(e) {
-                                console.log('Error writing to emulator filesystem:', file.name);
-                            }
-                        }));
                     });
-                };
-                writeResources(zip);
+                } else {
+                    const writeResources = (zip) => {
+                        zip.forEach((path, file) => {
+                            if(file.dir) {
+                                FS.mkdirTree(file.name);
+                                writeResources(zip.folder(path));
+                                return;
+                            }
 
+                            promises.push(zip.file(path).async("uint8array").then(function (content) {
+                                console.log('Writing to emulator filesystem:', file.name);
+                                try {
+                                    FS.writeFile(file.name, content);
+                                }
+                                catch(e) {
+                                    console.log('Error writing to emulator filesystem:', file.name);
+                                }
+                            }));
+                        });
+                    };
+                    writeResources(zip);
+                }
                 return Promise.all(promises);
             })
             .then((value) => {
