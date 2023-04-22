@@ -339,7 +339,7 @@ function addStartFile(manifestObject) {
         emuArguments.push('-bas', manifestObject.start_bas, '-run');
     }
     else if (manifestObject.start_prg) {
-        console.log('Adding start PRG: ', manifestObject.start_prg)
+        console.log('Adding start PRG:', manifestObject.start_prg)
         emuArguments.push('-prg', manifestObject.start_prg, '-run');
     }
 }
