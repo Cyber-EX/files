@@ -68,21 +68,22 @@ if (layouts.includes(lang)) {
     lang = 'en-us';
 }
 
+var url = new URL(window.location.href);
+var manifest_link = url.searchParams.get("manifest");
+var isZipFile = false;
+
 
 
 console.log('========');
+console.log('TRY 1');
 
-fetch(url).then(resp=>{
+fetch(manifest_link).then(resp=>{
     console.log(resp.headers);
 })
 
 console.log('========');
 
 
-
-var url = new URL(window.location.href);
-var manifest_link = url.searchParams.get("manifest");
-var isZipFile = false;
 
 if (manifest_link && manifest_link.endsWith('.zip')) {
     isZipFile = true;
