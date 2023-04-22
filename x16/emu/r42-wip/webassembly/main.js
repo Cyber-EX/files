@@ -75,10 +75,16 @@ var isZipFile = false;
 
 
 console.log('========');
-console.log('TRY 1');
+console.log('TRY 2');
 
 fetch(manifest_link).then(resp=>{
     console.log(resp.headers);
+  // Inspect the headers in the response
+  resp.headers.forEach(console.log);
+  console.log('--------');
+  // OR you can do this
+  for(let entry of resp.headers.entries()) {
+    console.log(entry);    
 })
 
 console.log('========');
