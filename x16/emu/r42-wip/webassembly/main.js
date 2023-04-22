@@ -99,7 +99,7 @@ function getFileName(disposition) {
     const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\.]+)(?:; ?|$)/i;
     const asciiFilenameRegex = /^filename=(["']?)(.*?[^\\])\1(?:; ?|$)/i;
 
-    let fileName: string = null;
+    let fileName = null;
     if (utf8FilenameRegex.test(disposition)) {
       fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)[1]);
     } else {
