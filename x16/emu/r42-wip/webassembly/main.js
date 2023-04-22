@@ -9,6 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
+console.log('TRY 7');
 
 // Audio Context Setup
 var audioContext;
@@ -70,62 +71,6 @@ if (layouts.includes(lang)) {
 
 var url = new URL(window.location.href);
 var manifest_link = url.searchParams.get("manifest");
-
-
-
-console.log('========');
-console.log('TRY 6 (func loadMasnifestLink)');
-
-fetch(manifest_link).then(resp=>{
-    console.log(resp.headers);
-  // Inspect the headers in the response
-  resp.headers.forEach(console.log);
-  console.log('--------');
-  // OR you can do this
-  for(let entry of resp.headers.entries()) {
-    console.log(entry);    
-  }
-  console.log('--------');
-    let contdisp = resp.headers.get('Content-Disposition');
-    console.log(contdisp);
-    console.log(getFileName(contdisp));
-})
-
-console.log('========');
-
-console.log('attachment; filename*=UTF-8\'\'FILE_UTF8.ext');
-console.log(getFileName('attachment; filename*=UTF-8\'\'FILE_UTF8.ext'));
-console.log(getFileName('attachment;filename=FILE.ext'));
-
-
-function getFileName(disposition) {
-    const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\.]+)(?:; ?|$)/i;
-    const asciiFilenameRegex = /^filename=(["']?)(.*?[^\\])\1(?:; ?|$)/i;
-
-    let fileName = null;
-    if (utf8FilenameRegex.test(disposition)) {
-      fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)[1]);
-    } else {
-      // prevent ReDos attacks by anchoring the ascii regex to string start and
-      //  slicing off everything before 'filename='
-      const filenameStart = disposition.toLowerCase().indexOf('filename=');
-      if (filenameStart >= 0) {
-        const partialDisposition = disposition.slice(filenameStart);
-        const matches = asciiFilenameRegex.exec(partialDisposition );
-        if (matches != null && matches[2]) {
-          fileName = matches[2];
-        }
-      }
-    }
-    return fileName;
-}
-
-
-
-
-
-
-
 
 var emuArguments = ['-keymap', lang, '-rtc'];
 
@@ -231,18 +176,52 @@ window.onerror = function () {
 };
 
 function loadManifestLink() {
-    var isZipFile = false;
+    console.log("Loading URL:", manifest_link);
+    fetch(manifest_link).then(resp => {
+        var filename;
+        var disposition = resp.headers.get('Content-Disposition');
+        if (disposition) {
+            var filename = parseDispositionFilename(disposition);
+            if (filename) {
+                console.log("Loading filename:", filename);
+                console.log("* * * WiP * * *");
+            }
+        } else {
+            if (manifest_link.endsWith('.zip')) {
+                console.log("Loading as zip.");
+                loadZip(manifest_link);
+            }
+            else {
+                if (!manifest_link.endsWith('/')) {
+                    manifest_link = manifest_link + '/';
+                }
+                console.log("Loading as directory.");
+                loadManifest();
+            }
+        }
+    })
+}
 
-    if (manifest_link.endsWith('.zip')) {
-        isZipFile = true;
-    }
+function parseDispositionFilename(disposition) {
+    const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\.]+)(?:; ?|$)/i;
+    const asciiFilenameRegex = /^filename=(["']?)(.*?[^\\])\1(?:; ?|$)/i;
 
-    if (isZipFile === true) {
-        loadZip(manifest_link);
+    let fileName = null;
+    if (utf8FilenameRegex.test(disposition)) {
+        fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)[1]);
+    } else {
+        // prevent ReDos attacks by anchoring the ascii regex to string start and
+        // slicing off everything before 'filename='
+        const filenameStart = disposition.toLowerCase().indexOf('filename=');
+        if (filenameStart >= 0) {
+            const partialDisposition = disposition.slice(filenameStart);
+            const matches = asciiFilenameRegex.exec(partialDisposition);
+            if (matches != null && matches[2]) {
+                fileName = matches[2];
+            }
+        }
     }
-    else {
-        loadManifest();
-    }
+    return fileName;
 }
 
 function loadZip(zipFileUrl) {
@@ -333,9 +312,6 @@ function extractManifestFromBuffer(zip) {
 }
 
 function loadManifest() {
-    if (!manifest_link.endsWith('/')) {
-        manifest_link = manifest_link + '/';
-    }
     addRunDependency('load-manifest');
     fetch(manifest_link + 'manifest.json').then(function (response) {
         return response.json();
