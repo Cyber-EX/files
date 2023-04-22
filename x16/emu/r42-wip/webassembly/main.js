@@ -70,12 +70,11 @@ if (layouts.includes(lang)) {
 
 var url = new URL(window.location.href);
 var manifest_link = url.searchParams.get("manifest");
-var isZipFile = false;
 
 
 
 console.log('========');
-console.log('TRY 5 (add start func)');
+console.log('TRY 6 (func loadMasnifestLink)');
 
 fetch(manifest_link).then(resp=>{
     console.log(resp.headers);
@@ -127,12 +126,6 @@ function getFileName(disposition) {
 
 
 
-if (manifest_link && manifest_link.endsWith('.zip')) {
-    isZipFile = true;
-}
-else if (manifest_link && !manifest_link.endsWith('/')) {
-    manifest_link = manifest_link + '/';
-}
 
 var emuArguments = ['-keymap', lang, '-rtc'];
 
@@ -149,12 +142,7 @@ var Module = {
         function () {
 
             if (manifest_link) {
-                if (isZipFile === true) {
-                    loadZip(manifest_link);
-                }
-                else {
-                    loadManifest();
-                }
+                loadManifestLink();
             }
         }
     ],
@@ -241,6 +229,21 @@ window.onerror = function () {
         if (text) Module.printErr('[post-exception status] ' + text);
     };
 };
+
+function loadManifestLink() {
+    var isZipFile = false;
+
+    if (manifest_link.endsWith('.zip')) {
+        isZipFile = true;
+    }
+
+    if (isZipFile === true) {
+        loadZip(manifest_link);
+    }
+    else {
+        loadManifest();
+    }
+}
 
 function loadZip(zipFileUrl) {
     addRunDependency('load-zip');
@@ -330,6 +333,9 @@ function extractManifestFromBuffer(zip) {
 }
 
 function loadManifest() {
+    if (!manifest_link.endsWith('/')) {
+        manifest_link = manifest_link + '/';
+    }
     addRunDependency('load-manifest');
     fetch(manifest_link + 'manifest.json').then(function (response) {
         return response.json();
