@@ -75,7 +75,7 @@ var isZipFile = false;
 
 
 console.log('========');
-console.log('TRY 2');
+console.log('TRY 3');
 
 fetch(manifest_link).then(resp=>{
     console.log(resp.headers);
@@ -89,6 +89,37 @@ fetch(manifest_link).then(resp=>{
 })
 
 console.log('========');
+
+console.log('attachment; filename*=UTF-8\'\'MAZEDEMO.ZIP');
+console.log(getFileName('attachment; filename*=UTF-8\'\'MAZEDEMO.ZIP'));
+console.log(getFileName('attachment;filename=XYZ.csv'));
+
+
+function getFileName(disposition) {
+    const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\.]+)(?:; ?|$)/i;
+    const asciiFilenameRegex = /^filename=(["']?)(.*?[^\\])\1(?:; ?|$)/i;
+
+    let fileName: string = null;
+    if (utf8FilenameRegex.test(disposition)) {
+      fileName = decodeURIComponent(utf8FilenameRegex.exec(disposition)[1]);
+    } else {
+      // prevent ReDos attacks by anchoring the ascii regex to string start and
+      //  slicing off everything before 'filename='
+      const filenameStart = disposition.toLowerCase().indexOf('filename=');
+      if (filenameStart >= 0) {
+        const partialDisposition = disposition.slice(filenameStart);
+        const matches = asciiFilenameRegex.exec(partialDisposition );
+        if (matches != null && matches[2]) {
+          fileName = matches[2];
+        }
+      }
+    }
+    return fileName;
+}
+
+
+
+
 
 
 
