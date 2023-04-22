@@ -279,6 +279,7 @@ function extractManifestFromBuffer(zip) {
 
                 const promises = [];
                 if (manifestObject.resources) {
+                    console.log('Found resources section in manifest.');
                     manifestObject.resources.forEach(function (element) {
                         let fileName = element.replace(/^.*[\\\/]/, '');
 
@@ -288,11 +289,17 @@ function extractManifestFromBuffer(zip) {
                         } else {
                             promises.push(zip.file(fileName).async("uint8array").then(function (content) {
                                 console.log('Writing to emulator filesystem:', fileName);
-                                FS.writeFile(fileName, content);
+                                try {
+                                    FS.writeFile(fileName, content);
+                                }
+                                catch(e) {
+                                    console.log('Error writing to emulator filesystem:', file.name);
+                                }
                             }));
                         }
                     });
                 } else {
+                    console.log('Resources section not found in manifest. Searching all files in zip.');
                     const writeResources = (zip) => {
                         zip.forEach((path, file) => {
                             if(file.dir) {
