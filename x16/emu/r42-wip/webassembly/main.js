@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 13');
+console.log('TRY 14');
 
 // Audio Context Setup
 var audioContext;
@@ -207,8 +207,8 @@ function loadManifestLink() {
             }
         })
         .then(function () {
-            console.log("Starting Emulator...")
-            console.log("Emulator arguments: ", emuArguments)
+            //console.log("Starting Emulator...")
+            //console.log("Emulator arguments: ", emuArguments)
             removeRunDependency('load-manifest-link');
         });
 }
@@ -255,6 +255,8 @@ function loadZip(zipFileUrl) {
         .then(JSZip.loadAsync)
         .then(extractManifestFromBuffer)
         .then(function () {
+            console.log("Starting Emulator...")
+            console.log("Emulator arguments: ", emuArguments)
             removeRunDependency('load-zip');
         });
 }
@@ -343,6 +345,8 @@ function loadManifest() {
             let filename = element.replace(/^.*[\\\/]/, '')
             FS.createPreloadedFile('/', filename, element, true, true);
         });
+        console.log("Starting Emulator...")
+        console.log("Emulator arguments: ", emuArguments)
         removeRunDependency('load-manifest');
     }).catch(function () {
         console.log("Unable to read manifest. Check the manifest http parameter");
