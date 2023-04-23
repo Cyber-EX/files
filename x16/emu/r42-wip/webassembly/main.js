@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 14');
+console.log('TRY 15');
 
 // Audio Context Setup
 var audioContext;
@@ -188,12 +188,12 @@ function loadManifestLink() {
                     console.log("* * * WiP * * *");
                 }
             } else {
-                if (manifest_link.endsWith('.prg')) {
-                    console.log("Loading from PRG.");
-                    loadPrg(manifest_link);
-                } else if (manifest_link.endsWith('.bas')) {
+                if (manifest_link.endsWith('.bas')) {
                     console.log("Loading from BAS.");
                     loadBas(manifest_link);
+                } else if (manifest_link.endsWith('.prg')) {
+                    console.log("Loading from PRG.");
+                    loadPrg(manifest_link);
                 } else if (manifest_link.endsWith('.zip')) {
                     console.log("Loading from ZIP.");
                     loadZip(manifest_link);
@@ -235,10 +235,22 @@ function parseDispositionFilename(disposition) {
     return fileName;
 }
 
-function loadPrg(prgFileUrl) {
+function loadBas(basFileUrl) {
+    var filename = basFileUrl.replace(/^.*[\\\/]/, '');
+    console.log('Adding start BAS:', filename)
+    emuArguments.push('-bas', filename, '-run');
+    FS.createPreloadedFile('/', filename, basFileUrl, true, true);
+    console.log("Starting Emulator...")
+    console.log("Emulator arguments: ", emuArguments)
 }
 
-function loadBas(basFileUrl) {
+function loadPrg(prgFileUrl) {
+    var filename = prgFileUrl.replace(/^.*[\\\/]/, '');
+    console.log('Adding start PRG:', filename)
+    emuArguments.push('-prg', filename, '-run');
+    FS.createPreloadedFile('/', filename, prgFileUrl, true, true);
+    console.log("Starting Emulator...")
+    console.log("Emulator arguments: ", emuArguments)
 }
 
 function loadZip(zipFileUrl) {
