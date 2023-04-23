@@ -363,6 +363,7 @@ function loadManifest() {
             let filename = element.replace(/^.*[\\\/]/, '')
             if (filename.toLowerCase().endsWith(".bas") || filename.toLowerCase().endsWith(".prg")) {
                 startFiles.push(filename);
+            }
             FS.createPreloadedFile('/', filename, element, true, true);
         });
         console.log("Start files:", startFiles)
