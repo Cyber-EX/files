@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 23');
+console.log('TRY 24');
 
 // Audio Context Setup
 var audioContext;
@@ -357,12 +357,15 @@ function loadManifest() {
         addStartFile(manifest);
         console.log("Loading from manifest:")
         console.log(manifest);
+        var startFiles = []
         manifest.resources.forEach(element => {
             element = manifest_link + element;
             let filename = element.replace(/^.*[\\\/]/, '')
+            if (filename.toLowerCase().endsWith(".bas") || filename.toLowerCase().endsWith(".prg")) {
+                startFiles.push(filename);
             FS.createPreloadedFile('/', filename, element, true, true);
-
         });
+        console.log("Start files:", startFiles)
         console.log("Starting Emulator...")
         console.log("Emulator arguments: ", emuArguments)
         removeRunDependency('load-manifest');
