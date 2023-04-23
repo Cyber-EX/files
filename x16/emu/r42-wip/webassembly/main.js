@@ -200,6 +200,8 @@ function loadManifestLink() {
                 loadManifest();
             }
         }
+        console.log("Starting Emulator...")
+        console.log("Emulator arguments: ", emuArguments)
         removeRunDependency('load-manifest-link');
     })
 }
@@ -240,8 +242,6 @@ function loadZip(zipFileUrl) {
         .then(JSZip.loadAsync)
         .then(extractManifestFromBuffer)
         .then(function () {
-            console.log("Starting Emulator...")
-            console.log("Emulator arguments: ", emuArguments)
             removeRunDependency('load-zip');
         });
 }
