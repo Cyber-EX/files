@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 11');
+console.log('TRY 12');
 
 // Audio Context Setup
 var audioContext;
@@ -178,7 +178,6 @@ window.onerror = function () {
 function loadManifestLink() {
     addRunDependency('load-manifest-link');
     console.log("Loading URL:", manifest_link);
-    console.log("File in URL:", manifest_link.replace(/^.*[\\\/]/, ''));
     fetch(manifest_link)
         .then(response => {
             var disposition = response.headers.get('Content-Disposition');
@@ -189,15 +188,20 @@ function loadManifestLink() {
                     console.log("* * * WiP * * *");
                 }
             } else {
-                if (manifest_link.endsWith('.zip')) {
-                    console.log("Loading from zip.");
+                if (manifest_link.endsWith('.prg')) {
+                    console.log("Loading from PRG.");
+                    loadPrg(manifest_link);
+                } else if (manifest_link.endsWith('.bas')) {
+                    console.log("Loading from BAS.");
+                    loadBas(manifest_link);
+                } else if (manifest_link.endsWith('.zip')) {
+                    console.log("Loading from ZIP.");
                     loadZip(manifest_link);
-                }
-                else {
+                } else {
+                    console.log("Loading from directory.");
                     if (!manifest_link.endsWith('/')) {
                         manifest_link = manifest_link + '/';
                     }
-                    console.log("Loading from directory.");
                     loadManifest();
                 }
             }
@@ -229,6 +233,12 @@ function parseDispositionFilename(disposition) {
         }
     }
     return fileName;
+}
+
+function loadPrg(prgFileUrl) {
+}
+
+function loadBas(basFileUrl) {
 }
 
 function loadZip(zipFileUrl) {
