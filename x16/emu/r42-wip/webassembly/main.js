@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 19');
+console.log('TRY 20');
 
 // Audio Context Setup
 var audioContext;
@@ -176,7 +176,7 @@ window.onerror = function () {
 };
 
 function loadManifestLink() {
-    addRunDependency('load-manifest-link');
+    //addRunDependency('load-manifest-link');
     console.log("Loading URL:", manifest_link);
     fetch(manifest_link)
         .then(function (response) {
@@ -263,6 +263,7 @@ function loadPrg(prgFileUrl, filename) {
 }
 
 function loadZip(zipFileUrl) {
+    addRunDependency('load-manifest-link');
     addRunDependency('load-zip');
     fetch(zipFileUrl)
         .then(function (response) {
@@ -352,6 +353,7 @@ function extractManifestFromBuffer(zip) {
 }
 
 function loadManifest() {
+    addRunDependency('load-manifest-link');
     addRunDependency('load-manifest');
     fetch(manifest_link + 'manifest.json').then(function (response) {
         return response.json();
