@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 10');
+console.log('TRY 11');
 
 // Audio Context Setup
 var audioContext;
@@ -179,32 +179,34 @@ function loadManifestLink() {
     addRunDependency('load-manifest-link');
     console.log("Loading URL:", manifest_link);
     console.log("File in URL:", manifest_link.replace(/^.*[\\\/]/, ''));
-    fetch(manifest_link).then(resp => {
-        var filename;
-        var disposition = resp.headers.get('Content-Disposition');
-        if (disposition) {
-            var filename = parseDispositionFilename(disposition);
-            if (filename) {
-                console.log("Loading filename:", filename);
-                console.log("* * * WiP * * *");
-            }
-        } else {
-            if (manifest_link.endsWith('.zip')) {
-                console.log("Loading as zip.");
-                loadZip(manifest_link);
-            }
-            else {
-                if (!manifest_link.endsWith('/')) {
-                    manifest_link = manifest_link + '/';
+    fetch(manifest_link)
+        .then(response => {
+            var disposition = response.headers.get('Content-Disposition');
+            if (disposition) {
+                var filename = parseDispositionFilename(disposition);
+                if (filename) {
+                    console.log("Loading filename:", filename);
+                    console.log("* * * WiP * * *");
                 }
-                console.log("Loading as directory.");
-                loadManifest();
+            } else {
+                if (manifest_link.endsWith('.zip')) {
+                    console.log("Loading from zip.");
+                    loadZip(manifest_link);
+                }
+                else {
+                    if (!manifest_link.endsWith('/')) {
+                        manifest_link = manifest_link + '/';
+                    }
+                    console.log("Loading from directory.");
+                    loadManifest();
+                }
             }
-        }
-        console.log("Starting Emulator...")
-        console.log("Emulator arguments: ", emuArguments)
-        removeRunDependency('load-manifest-link');
-    })
+        })
+        .then(function () {
+            console.log("Starting Emulator...")
+            console.log("Emulator arguments: ", emuArguments)
+            removeRunDependency('load-manifest-link');
+        });
 }
 
 function parseDispositionFilename(disposition) {
@@ -293,15 +295,17 @@ function extractManifestFromBuffer(zip) {
                                 return;
                             }
 
-                            promises.push(zip.file(path).async("uint8array").then(function (content) {
-                                console.log('Writing to emulator filesystem:', file.name);
-                                try {
-                                    FS.writeFile(file.name, content);
-                                }
-                                catch(e) {
-                                    console.log('Error writing to emulator filesystem:', file.name);
-                                }
-                            }));
+                            promises.push(zip.file(path).async("uint8array")
+                                .then(function (content) {
+                                    console.log('Writing to emulator filesystem:', file.name);
+                                    try {
+                                        FS.writeFile(file.name, content);
+                                    }
+                                    catch(e) {
+                                        console.log('Error writing to emulator filesystem:', file.name);
+                                    }
+                                })
+                            );
                         });
                     };
                     writeResources(zip);
