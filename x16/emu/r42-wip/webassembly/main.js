@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 18');
+console.log('TRY 19');
 
 // Audio Context Setup
 var audioContext;
@@ -185,15 +185,26 @@ function loadManifestLink() {
                 var filename = parseDispositionFilename(disposition);
                 if (filename) {
                     console.log("Loading filename:", filename);
-                    console.log("* * * WiP * * *");
+                    if (filename.toLowerCase().endsWith('.bas')) {
+                        console.log("Loading from BAS.");
+                        loadBas(manifest_link, filename);
+                    } else if (filename.toLowerCase().endsWith('.prg')) {
+                        console.log("Loading from PRG.");
+                        loadPrg(manifest_link, filename);
+                    } else if (filename.toLowerCase().endsWith('.zip')) {
+                        console.log("Loading from ZIP.");
+                        loadZip(manifest_link);
+                    }
                 }
             } else {
                 if (manifest_link.toLowerCase().endsWith('.bas')) {
+                    var filename = manifest_link.replace(/^.*[\\\/]/, '');
                     console.log("Loading from BAS.");
-                    loadBas(manifest_link);
+                    loadBas(manifest_link, filename);
                 } else if (manifest_link.toLowerCase().endsWith('.prg')) {
+                    var filename = manifest_link.replace(/^.*[\\\/]/, '');
                     console.log("Loading from PRG.");
-                    loadPrg(manifest_link);
+                    loadPrg(manifest_link, filename);
                 } else if (manifest_link.toLowerCase().endsWith('.zip')) {
                     console.log("Loading from ZIP.");
                     loadZip(manifest_link);
@@ -235,8 +246,7 @@ function parseDispositionFilename(disposition) {
     return fileName;
 }
 
-function loadBas(basFileUrl) {
-    var filename = basFileUrl.replace(/^.*[\\\/]/, '');
+function loadBas(basFileUrl, filename) {
     console.log('Adding start BAS:', filename)
     emuArguments.push('-bas', filename, '-run');
     FS.createPreloadedFile('/', filename, basFileUrl, true, true);
@@ -244,8 +254,7 @@ function loadBas(basFileUrl) {
     console.log("Emulator arguments: ", emuArguments)
 }
 
-function loadPrg(prgFileUrl) {
-    var filename = prgFileUrl.replace(/^.*[\\\/]/, '');
+function loadPrg(prgFileUrl, filename) {
     console.log('Adding start PRG:', filename)
     emuArguments.push('-prg', filename, '-run');
     FS.createPreloadedFile('/', filename, prgFileUrl, true, true);
