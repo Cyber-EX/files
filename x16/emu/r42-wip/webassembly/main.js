@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 25');
+console.log('TRY 26');
 
 // Audio Context Setup
 var audioContext;
@@ -352,9 +352,9 @@ function extractManifestFromBuffer(zip) {
                 return Promise.all(promises);
             })
             .then((value) => {
+                console.log("Start files:", startFiles);
                 console.log("Emulator filesystem loading complete.")
             });
-            console.log("Start files:", startFiles);
     }
 }
 
