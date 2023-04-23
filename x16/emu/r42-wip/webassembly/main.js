@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 24');
+console.log('TRY 25');
 
 // Audio Context Setup
 var audioContext;
@@ -296,10 +296,14 @@ function extractManifestFromBuffer(zip) {
                 addStartFile(manifestObject);
 
                 const promises = [];
+                var startFiles = [];
                 if (manifestObject.resources) {
                     console.log('Found resources section in manifest.');
                     manifestObject.resources.forEach(function (element) {
                         let fileName = element.replace(/^.*[\\\/]/, '');
+                        if (fileName.toLowerCase().endsWith(".bas") || fileName.toLowerCase().endsWith(".prg")) {
+                            startFiles.push(filename);
+                        }
 
                         if (zip.file(fileName) == null) {
                             logError("Unable to find resources entry: " + fileName);
@@ -324,6 +328,10 @@ function extractManifestFromBuffer(zip) {
                                 FS.mkdirTree(file.name);
                                 writeResources(zip.folder(path));
                                 return;
+                            } else {
+                                if (file.name.toLowerCase().endsWith(".bas") || file.name.toLowerCase().endsWith(".prg")) {
+                                    startFiles.push(file.name);
+                                }
                             }
 
                             promises.push(zip.file(path).async("uint8array")
@@ -346,6 +354,7 @@ function extractManifestFromBuffer(zip) {
             .then((value) => {
                 console.log("Emulator filesystem loading complete.")
             });
+            console.log("Start files:", startFiles);
     }
 }
 
@@ -357,7 +366,7 @@ function loadManifest() {
         addStartFile(manifest);
         console.log("Loading from manifest:")
         console.log(manifest);
-        var startFiles = []
+        var startFiles = [];
         manifest.resources.forEach(element => {
             element = manifest_link + element;
             let filename = element.replace(/^.*[\\\/]/, '')
@@ -366,7 +375,7 @@ function loadManifest() {
             }
             FS.createPreloadedFile('/', filename, element, true, true);
         });
-        console.log("Start files:", startFiles)
+        console.log("Start files:", startFiles);
         console.log("Starting Emulator...")
         console.log("Emulator arguments: ", emuArguments)
         removeRunDependency('load-manifest');
