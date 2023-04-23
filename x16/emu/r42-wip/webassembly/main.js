@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 20');
+console.log('TRY 21');
 
 // Audio Context Setup
 var audioContext;
@@ -216,12 +216,12 @@ function loadManifestLink() {
                     loadManifest();
                 }
             }
-        })
-        .then(function () {
-            console.log("### Starting Emulator...")
-            console.log("### Emulator arguments: ", emuArguments)
-            removeRunDependency('load-manifest-link');
         });
+        //.then(function () {
+        //    console.log("### Starting Emulator...")
+        //    console.log("### Emulator arguments: ", emuArguments)
+        //    removeRunDependency('load-manifest-link');
+        //});
 }
 
 function parseDispositionFilename(disposition) {
@@ -263,7 +263,6 @@ function loadPrg(prgFileUrl, filename) {
 }
 
 function loadZip(zipFileUrl) {
-    addRunDependency('load-manifest-link');
     addRunDependency('load-zip');
     fetch(zipFileUrl)
         .then(function (response) {
@@ -353,7 +352,6 @@ function extractManifestFromBuffer(zip) {
 }
 
 function loadManifest() {
-    addRunDependency('load-manifest-link');
     addRunDependency('load-manifest');
     fetch(manifest_link + 'manifest.json').then(function (response) {
         return response.json();
