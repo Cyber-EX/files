@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 12');
+console.log('TRY 13');
 
 // Audio Context Setup
 var audioContext;
@@ -179,7 +179,7 @@ function loadManifestLink() {
     addRunDependency('load-manifest-link');
     console.log("Loading URL:", manifest_link);
     fetch(manifest_link)
-        .then(response => {
+        .then(function (response) {
             var disposition = response.headers.get('Content-Disposition');
             if (disposition) {
                 var filename = parseDispositionFilename(disposition);
