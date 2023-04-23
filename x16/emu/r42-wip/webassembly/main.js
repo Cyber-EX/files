@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 21');
+console.log('TRY 22');
 
 // Audio Context Setup
 var audioContext;
@@ -176,7 +176,7 @@ window.onerror = function () {
 };
 
 function loadManifestLink() {
-    //addRunDependency('load-manifest-link');
+    addRunDependency('load-manifest-link');
     console.log("Loading URL:", manifest_link);
     fetch(manifest_link)
         .then(function (response) {
@@ -216,12 +216,12 @@ function loadManifestLink() {
                     loadManifest();
                 }
             }
-        });
-        //.then(function () {
+        })
+        .then(function () {
         //    console.log("### Starting Emulator...")
         //    console.log("### Emulator arguments: ", emuArguments)
-        //    removeRunDependency('load-manifest-link');
-        //});
+            removeRunDependency('load-manifest-link');
+        });
 }
 
 function parseDispositionFilename(disposition) {
