@@ -286,6 +286,7 @@ function extractManifestFromBuffer(zip) {
         return Promise.resolve();
     }
     else {
+        var startFiles = [];
         return zip.file("manifest.json").async("uint8array")
             .then(function (content) {
                 let manifestString = new TextDecoder("utf-8").decode(content);
@@ -296,7 +297,6 @@ function extractManifestFromBuffer(zip) {
                 addStartFile(manifestObject);
 
                 const promises = [];
-                var startFiles = [];
                 if (manifestObject.resources) {
                     console.log('Found resources section in manifest.');
                     manifestObject.resources.forEach(function (element) {
