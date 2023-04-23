@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 15');
+console.log('TRY 16');
 
 // Audio Context Setup
 var audioContext;
@@ -188,13 +188,13 @@ function loadManifestLink() {
                     console.log("* * * WiP * * *");
                 }
             } else {
-                if (manifest_link.endsWith('.bas')) {
+                if (manifest_link.toLowerCase().endsWith('.bas')) {
                     console.log("Loading from BAS.");
                     loadBas(manifest_link);
-                } else if (manifest_link.endsWith('.prg')) {
+                } else if (manifest_link.toLowerCase().endsWith('.prg')) {
                     console.log("Loading from PRG.");
                     loadPrg(manifest_link);
-                } else if (manifest_link.endsWith('.zip')) {
+                } else if (manifest_link.toLowerCase().endsWith('.zip')) {
                     console.log("Loading from ZIP.");
                     loadZip(manifest_link);
                 } else {
