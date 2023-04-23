@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 16');
+console.log('TRY 18');
 
 // Audio Context Setup
 var audioContext;
@@ -207,8 +207,8 @@ function loadManifestLink() {
             }
         })
         .then(function () {
-            //console.log("Starting Emulator...")
-            //console.log("Emulator arguments: ", emuArguments)
+            console.log("### Starting Emulator...")
+            console.log("### Emulator arguments: ", emuArguments)
             removeRunDependency('load-manifest-link');
         });
 }
