@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 22');
+console.log('TRY 23');
 
 // Audio Context Setup
 var audioContext;
@@ -218,8 +218,6 @@ function loadManifestLink() {
             }
         })
         .then(function () {
-        //    console.log("### Starting Emulator...")
-        //    console.log("### Emulator arguments: ", emuArguments)
             removeRunDependency('load-manifest-link');
         });
 }
@@ -355,16 +353,15 @@ function loadManifest() {
     addRunDependency('load-manifest');
     fetch(manifest_link + 'manifest.json').then(function (response) {
         return response.json();
-    }).then(function (manifestObject) {
+    }).then(function (manifest) {
+        addStartFile(manifest);
         console.log("Loading from manifest:")
-        console.log(manifestObject);
-
-        addStartFile(manifestObject);
-
-        manifestObject.resources.forEach(element => {
+        console.log(manifest);
+        manifest.resources.forEach(element => {
             element = manifest_link + element;
             let filename = element.replace(/^.*[\\\/]/, '')
             FS.createPreloadedFile('/', filename, element, true, true);
+
         });
         console.log("Starting Emulator...")
         console.log("Emulator arguments: ", emuArguments)
