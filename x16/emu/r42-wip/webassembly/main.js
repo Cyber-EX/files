@@ -302,7 +302,7 @@ function extractManifestFromBuffer(zip) {
                     manifestObject.resources.forEach(function (element) {
                         let fileName = element.replace(/^.*[\\\/]/, '');
                         if (fileName.toLowerCase().endsWith(".bas") || fileName.toLowerCase().endsWith(".prg")) {
-                            startFiles.push(filename);
+                            startFiles.push(fileName);
                         }
 
                         if (zip.file(fileName) == null) {
