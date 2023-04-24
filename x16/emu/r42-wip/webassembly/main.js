@@ -322,7 +322,7 @@ function extractManifestFromBuffer(zip) {
                     });
                 } else {
                     console.log('Resources section not found in manifest. Writing all files from zip.');
-                    writeAllFilesFromZip(zip, startFiles);
+                    writeAllFilesFromZip(zip, startFiles, promises);
                 }
                 return Promise.all(promises);
             })
@@ -333,7 +333,7 @@ function extractManifestFromBuffer(zip) {
     }
 }
 
-function writeAllFilesFromZip(zip, startFiles) {
+function writeAllFilesFromZip(zip, startFiles, promises) {
     const writeResources = (zip) => {
         zip.forEach((path, file) => {
             if(file.dir) {
