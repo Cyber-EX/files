@@ -399,7 +399,7 @@ function addStartFile(manifestObject, startFiles) {
     } else if (manifestObject.start_prg) {
         console.log('Adding start PRG:', manifestObject.start_prg)
         emuArguments.push('-prg', manifestObject.start_prg, '-run');
-    } else if (startFiles.length === 1)
+    } else if (startFiles.length === 1) {
         var filename = startFiles[0];
         if (filename.toLowerCase().endsWith(".bas")) {
             console.log('Adding start BAS:', filename)
