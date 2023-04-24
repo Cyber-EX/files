@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 26');
+console.log('TRY 27');
 
 // Audio Context Setup
 var audioContext;
@@ -321,33 +321,8 @@ function extractManifestFromBuffer(zip) {
                         }
                     });
                 } else {
-                    console.log('Resources section not found in manifest. Searching all files in zip.');
-                    const writeResources = (zip) => {
-                        zip.forEach((path, file) => {
-                            if(file.dir) {
-                                FS.mkdirTree(file.name);
-                                writeResources(zip.folder(path));
-                                return;
-                            } else {
-                                if (file.name.toLowerCase().endsWith(".bas") || file.name.toLowerCase().endsWith(".prg")) {
-                                    startFiles.push(file.name);
-                                }
-                            }
-
-                            promises.push(zip.file(path).async("uint8array")
-                                .then(function (content) {
-                                    console.log('Writing to emulator filesystem:', file.name);
-                                    try {
-                                        FS.writeFile(file.name, content);
-                                    }
-                                    catch(e) {
-                                        console.log('Error writing to emulator filesystem:', file.name);
-                                    }
-                                })
-                            );
-                        });
-                    };
-                    writeResources(zip);
+                    console.log('Resources section not found in manifest. Writing all files from zip.');
+                    writeAllFilesFromZip(zip, startFiles);
                 }
                 return Promise.all(promises);
             })
@@ -356,6 +331,35 @@ function extractManifestFromBuffer(zip) {
                 console.log("Emulator filesystem loading complete.")
             });
     }
+}
+
+function writeAllFilesFromZip(zip, startFiles) {
+    const writeResources = (zip) => {
+        zip.forEach((path, file) => {
+            if(file.dir) {
+                FS.mkdirTree(file.name);
+                writeResources(zip.folder(path));
+                return;
+            } else {
+                if (file.name.toLowerCase().endsWith(".bas") || file.name.toLowerCase().endsWith(".prg")) {
+                    startFiles.push(file.name);
+                }
+            }
+
+            promises.push(zip.file(path).async("uint8array")
+                .then(function (content) {
+                    console.log('Writing to emulator filesystem:', file.name);
+                    try {
+                        FS.writeFile(file.name, content);
+                    }
+                    catch(e) {
+                        console.log('Error writing to emulator filesystem:', file.name);
+                    }
+                })
+            );
+        });
+    };
+    writeResources(zip);
 }
 
 function loadManifest() {
