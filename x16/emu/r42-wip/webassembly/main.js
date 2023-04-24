@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 27');
+console.log('TRY 28');
 
 // Audio Context Setup
 var audioContext;
@@ -282,7 +282,7 @@ function loadZip(zipFileUrl) {
 
 function extractManifestFromBuffer(zip) {
     if (zip.file("manifest.json") == null) {
-        logError("Unable to find manifest.json within: " + manifest_link);
+        logError("Unable to find manifest.json file.");
         return Promise.resolve();
     }
     else {
@@ -293,8 +293,6 @@ function extractManifestFromBuffer(zip) {
                 let manifestObject = JSON.parse(manifestString);
                 console.log("Parsed manifest from zip:")
                 console.log(manifestObject);
-
-                addStartFile(manifestObject);
 
                 const promises = [];
                 if (manifestObject.resources) {
@@ -327,8 +325,9 @@ function extractManifestFromBuffer(zip) {
                 return Promise.all(promises);
             })
             .then((value) => {
-                console.log("Start files:", startFiles);
                 console.log("Emulator filesystem loading complete.")
+                console.log("Start files:", startFiles);
+                addStartFile(manifestObject, startFiles);
             });
     }
 }
@@ -367,7 +366,6 @@ function loadManifest() {
     fetch(manifest_link + 'manifest.json').then(function (response) {
         return response.json();
     }).then(function (manifest) {
-        addStartFile(manifest);
         console.log("Loading from manifest:")
         console.log(manifest);
         var startFiles = [];
@@ -380,6 +378,7 @@ function loadManifest() {
             FS.createPreloadedFile('/', filename, element, true, true);
         });
         console.log("Start files:", startFiles);
+        addStartFile(manifest, startFiles);
         console.log("Starting Emulator...")
         console.log("Emulator arguments: ", emuArguments)
         removeRunDependency('load-manifest');
@@ -388,7 +387,7 @@ function loadManifest() {
     });
 }
 
-function addStartFile(manifestObject) {
+function addStartFile(manifestObject, startFiles) {
     if (manifestObject.start_bas && manifestObject.start_prg) {
         logError("start_bas and start_prg used in manifest");
         logError("This is likely an error, defaulting to start_bas")
@@ -397,10 +396,18 @@ function addStartFile(manifestObject) {
     if (manifestObject.start_bas) {
         console.log('Adding start BAS:', manifestObject.start_bas)
         emuArguments.push('-bas', manifestObject.start_bas, '-run');
-    }
-    else if (manifestObject.start_prg) {
+    } else if (manifestObject.start_prg) {
         console.log('Adding start PRG:', manifestObject.start_prg)
         emuArguments.push('-prg', manifestObject.start_prg, '-run');
+    } else if (startFiles.length === 1)
+        var filename = startFiles[0];
+        if (filename.toLowerCase().endsWith(".bas")) {
+            console.log('Adding start BAS:', filename)
+            emuArguments.push('-bas', filename, '-run');
+        } else if (filename.toLowerCase().endsWith(".prg")) {
+            console.log('Adding start PRG:', filename)
+            emuArguments.push('-prg', filename, '-run');
+        }
     }
 }
 
