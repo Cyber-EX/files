@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 29');
+console.log('TRY 30');
 
 // Audio Context Setup
 var audioContext;
@@ -282,7 +282,8 @@ function loadZip(zipFileUrl) {
 
 function extractManifestFromBuffer(zip) {
     if (zip.file("manifest.json") == null) {
-        logError("Unable to find manifest.json file.");
+        console.log("Unable to find manifest.json file. Writing all files from zip.");
+        writeAllFilesFromZip(zip, [], []);
         return Promise.resolve();
     }
     else {
@@ -382,7 +383,7 @@ function loadManifest() {
         console.log("Emulator arguments: ", emuArguments)
         removeRunDependency('load-manifest');
     }).catch(function () {
-        console.log("Unable to read manifest. Check the manifest http parameter");
+        console.log("Unable to read manifest. Check the manifest http parameter.");
     });
 }
 
