@@ -9,7 +9,7 @@ const spinnerElement = document.getElementById('spinner');
 const volumeElementFullScreen = document.getElementById('fullscreen_volume_icon');
 const volumeElement = document.getElementById('volume_icon');
 
-console.log('TRY 28');
+console.log('TRY 29');
 
 // Audio Context Setup
 var audioContext;
@@ -316,7 +316,6 @@ function extractManifestFromBuffer(zip) {
                                 }
                             }));
                         }
-                        console.log("Start files:", startFiles);
                         addStartFile(manifestObject, startFiles);
                     });
                 } else {
@@ -359,7 +358,6 @@ function writeAllFilesFromZip(zip, promises, manifestObject) {
         });
     };
     writeResources(zip);
-    console.log("Start files:", startFiles);
     addStartFile(manifestObject, startFiles);
 }
 
@@ -379,7 +377,6 @@ function loadManifest() {
             }
             FS.createPreloadedFile('/', filename, element, true, true);
         });
-        console.log("Start files:", startFiles);
         addStartFile(manifest, startFiles);
         console.log("Starting Emulator...")
         console.log("Emulator arguments: ", emuArguments)
@@ -401,14 +398,18 @@ function addStartFile(manifestObject, startFiles) {
     } else if (manifestObject && manifestObject.start_prg) {
         console.log('Adding start PRG:', manifestObject.start_prg)
         emuArguments.push('-prg', manifestObject.start_prg, '-run');
-    } else if (startFiles && startFiles.length === 1) {
-        var filename = startFiles[0];
-        if (filename.toLowerCase().endsWith(".bas")) {
-            console.log('Adding start BAS:', filename)
-            emuArguments.push('-bas', filename, '-run');
-        } else if (filename.toLowerCase().endsWith(".prg")) {
-            console.log('Adding start PRG:', filename)
-            emuArguments.push('-prg', filename, '-run');
+    } else if (startFiles) {
+        if (startFiles.length === 1) {
+            var filename = startFiles[0];
+            if (filename.toLowerCase().endsWith(".bas")) {
+                console.log('Adding start BAS:', filename)
+                emuArguments.push('-bas', filename, '-run');
+            } else if (filename.toLowerCase().endsWith(".prg")) {
+                console.log('Adding start PRG:', filename)
+                emuArguments.push('-prg', filename, '-run');
+            }
+        } else {
+            logOutput("Start files: " + startFiles);
         }
     }
 }
